@@ -9,6 +9,7 @@ A comprehensive platform designed to augment the Software Development Lifecycle 
 4. **Deployment Risk Scorer**: Predictive risk analysis for production releases.
 5. **Traceability Engine**: End-to-end mapping from requirements to deployment.
 6. **Multi-Agent Bug Fixer**: Collaborative AI agents for rapid MTTR.
+7. **AI System Architect**: Automated Mermaid.js architecture diagram generation.
 
 ## Tech Stack
 - **Backend**: FastAPI, OpenAI GPT-4o, LangChain, FAISS.

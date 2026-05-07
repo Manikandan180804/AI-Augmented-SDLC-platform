@@ -8,6 +8,7 @@ import DeploymentRisk from './pages/DeploymentRisk';
 import Traceability from './pages/Traceability';
 import BugFixer from './pages/BugFixer';
 import Webhooks from './pages/Webhooks';
+import Architecture from './pages/Architecture';
 import api from './api';
 
 const NAV = [{ to: '/', label: 'Dashboard', icon: '⬡', exact: true }];
@@ -18,7 +19,8 @@ const MODULES = [
   { to: '/deployment', label: 'Deployment Risk', icon: '🚀', badge: 'M4' },
   { to: '/traceability', label: 'Traceability Engine', icon: '🔗', badge: 'M5' },
   { to: '/bug-fix', label: 'Bug Fix Agent', icon: '🤖', badge: 'M6' },
-  { to: '/events', label: 'Integrations', icon: '🌐', badge: 'M7' },
+  { to: '/events', label: 'Integrations & RAG', icon: '🌐', badge: 'M7' },
+  { to: '/architecture', label: 'System Architect', icon: '📐', badge: 'M8' },
 ];
 
 function Sidebar({ open, onClose, apiOnline }) {
@@ -105,6 +107,7 @@ const PAGE_META = {
   '/traceability': { title: 'Traceability Engine', sub: 'Module 5' },
   '/bug-fix': { title: 'Bug Fix Agent', sub: 'Module 6' },
   '/events': { title: 'Integrations & RAG', sub: 'Module 7' },
+  '/architecture': { title: 'System Architect', sub: 'Module 8' },
 };
 
 function Layout({ children, path, apiOnline }) {
@@ -146,6 +149,7 @@ export default function App() {
         <Route path="/traceability" element={<Layout path="/traceability" apiOnline={apiOnline}><Traceability /></Layout>} />
         <Route path="/bug-fix" element={<Layout path="/bug-fix" apiOnline={apiOnline}><BugFixer /></Layout>} />
         <Route path="/events" element={<Layout path="/events" apiOnline={apiOnline}><Webhooks /></Layout>} />
+        <Route path="/architecture" element={<Layout path="/architecture" apiOnline={apiOnline}><Architecture /></Layout>} />
       </Routes>
     </BrowserRouter>
   );
