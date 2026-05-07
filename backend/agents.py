@@ -96,8 +96,51 @@ class SystemArchitect:
             context = self.rag.get_context(input_text)
         
         prompt_input = f"INPUT: {input_text}\n\nCONTEXT:\n{context}"
+        
+        # Smart Mock Logic for demo fallback
+        text = input_text.lower()
+        
+        # Extract potential components from input (capitalized words or first few words)
+        words = input_text.split()
+        components = [w.strip(".,!?;:") for w in words if w[0].isupper()] if words else []
+        if not components and len(words) > 0:
+            components = [words[0].capitalize()]
+        
+        if components:
+            comp_nodes = " --> ".join([f"{chr(65+i)}[{c}]" for i, c in enumerate(components[:3])])
+            comp_str = f"{comp_nodes} --> B[System Server]"
+        else:
+            comp_str = "A[User] --> B[System Server]"
+
         mock_diagram = {
-            "diagram": "graph TD\n  A[User] --> B[FastAPI]\n  B --> C{AI Engine}\n  C --> D[Response]\n  B --> E[Vector DB]",
-            "explanation": "Standard flow for the AI-SDLC platform components."
+            "diagram": f"graph TD\n  {comp_str}\n  B --> C{{AI Engine}}\n  C --> D[Response]\n  B --> DB[(Database)]",
+            "explanation": f"Custom architecture flow generated for: {input_text[:50]}..."
         }
+        
+        if "microservice" in text or "gateway" in text:
+            mock_diagram = {
+                "diagram": "graph LR\n  Client --> Gateway[API Gateway]\n  Gateway --> Auth[Auth Service]\n  Gateway --> Users[User Service]\n  Gateway --> Orders[Order Service]\n  Users --> DB[(User DB)]\n  Orders --> DB2[(Order DB)]",
+                "explanation": "Microservices architecture with centralized API Gateway and decentralized databases."
+            }
+        elif "serverless" in text or "lambda" in text:
+            mock_diagram = {
+                "diagram": "graph TD\n  User --> S3[CloudFront/S3]\n  S3 --> API[API Gateway]\n  API --> Lambda[AWS Lambda]\n  Lambda --> Dynamo[(DynamoDB)]\n  Lambda --> SNS[SNS/SQS]",
+                "explanation": "Serverless cloud architecture optimized for scalability and cost-efficiency."
+            }
+        elif "pipeline" in text or "ci/cd" in text:
+            mock_diagram = {
+                "diagram": "graph LR\n  Dev[Developer] --> GitHub\n  GitHub --> Actions[GitHub Actions]\n  Actions --> Test[Unit Tests]\n  Test --> Build[Docker Build]\n  Build --> Deploy[AWS ECS/EKS]",
+                "explanation": "Automated CI/CD pipeline for containerized deployments."
+            }
+        elif "frontend" in text or "react" in text:
+            mock_diagram = {
+                "diagram": "graph TD\n  UI[React UI] --> State[Redux/Zustand]\n  UI --> Hook[Custom Hooks]\n  Hook --> API[Axios/Fetch]\n  API --> Backend[FastAPI Server]",
+                "explanation": "Modern frontend architecture with state management and asynchronous API hooks."
+            }
+        elif "database" in text or "sql" in text or "storage" in text:
+             mock_diagram = {
+                "diagram": "graph TD\n  App[Application] --> Cache[Redis Cache]\n  App --> DB[(Primary DB)]\n  DB --> Replica[(Read Replica)]\n  App --> S3[Object Storage]",
+                "explanation": "Data-centric architecture featuring caching and database replication."
+            }
+            
         return self.call_ai(ARCHITECT_PROMPT, prompt_input, mock_diagram)

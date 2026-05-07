@@ -30,10 +30,21 @@ const Architecture = () => {
   const mermaidRef = useRef(null);
 
   useEffect(() => {
-    if (diagram && mermaidRef.current) {
-      mermaidRef.current.removeAttribute('data-processed');
-      mermaid.contentLoaded();
-    }
+    const renderDiagram = async () => {
+      if (diagram && mermaidRef.current) {
+        try {
+          // Reset mermaid attribute to allow re-render
+          mermaidRef.current.removeAttribute('data-processed');
+          await mermaid.run({
+            nodes: [mermaidRef.current],
+            suppressErrors: true
+          });
+        } catch (err) {
+          console.error("Mermaid render failed:", err);
+        }
+      }
+    };
+    renderDiagram();
   }, [diagram]);
 
   const handleGenerate = async () => {
