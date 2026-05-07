@@ -25,7 +25,6 @@ def create_presentation():
     prs.slide_height = Inches(7.5)
 
     # Define Layouts
-    # 0: Title, 1: Title & Content, 6: Blank
     title_slide_layout = prs.slide_layouts[0]
     bullet_slide_layout = prs.slide_layouts[1]
     blank_slide_layout = prs.slide_layouts[6]
@@ -49,15 +48,14 @@ def create_presentation():
 
     # --- Slide 2: The Problem Statement ---
     slide = prs.slides.add_slide(bullet_slide_layout)
-    # Background color (Dark)
     background = slide.background
     fill = background.fill
     fill.solid()
-    fill.fore_color.rgb = RGBColor(10, 25, 47) # Deep Navy
+    fill.fore_color.rgb = RGBColor(10, 25, 47)
 
     title = slide.shapes.title
     title.text = "The Problem Statement (The 'Why')"
-    title.text_frame.paragraphs[0].font.color.rgb = RGBColor(0, 183, 235) # Cyan
+    title.text_frame.paragraphs[0].font.color.rgb = RGBColor(0, 183, 235)
 
     body_shape = slide.shapes.placeholders[1]
     tf = body_shape.text_frame
@@ -77,13 +75,12 @@ def create_presentation():
         p.font.color.rgb = RGBColor(255, 255, 255)
         p.font.size = Pt(20)
 
-    # Add TL Quote
     p = tf.add_paragraph()
-    p.text = "" # Spacer
+    p.text = ""
     p = tf.add_paragraph()
     p.text = 'TL Quote: "There is a critical need for intelligent automation that catches errors before they reach production."'
     p.font.italic = True
-    p.font.color.rgb = RGBColor(255, 165, 0) # Orange accent
+    p.font.color.rgb = RGBColor(255, 165, 0)
     p.font.size = Pt(22)
 
     # --- Slide 3: The Solution ---
@@ -103,7 +100,7 @@ def create_presentation():
     tf.paragraphs[0].font.color.rgb = RGBColor(255, 255, 255)
 
     items = [
-        "Core: 6 specialized AI modules running on a high-performance stack.",
+        "Core: 8 specialized AI modules running on a high-performance stack.",
         "Stack: FastAPI (Backend) + React (Frontend).",
         "Goal: Zero-friction development with 100% traceability."
     ]
@@ -129,7 +126,7 @@ def create_presentation():
     arch_items = [
         "Frontend: React 18 with Glassmorphism Design System",
         "Backend: FastAPI for asynchronous AI orchestration",
-        "Knowledge: RAG Engine with FAISS Vector Store for codebase context",
+        "Knowledge: RAG Engine with FAISS Vector Store",
         "Connectivity: Event-driven Webhooks (GitHub / Jira)",
         "AI Engine: OpenAI GPT-4o (Structured Output API)"
     ]
@@ -139,41 +136,42 @@ def create_presentation():
         p.font.color.rgb = RGBColor(255, 255, 255)
         p.font.size = Pt(22)
 
-    # --- Slides 5-10: Modules ---
+    # --- Slides 5-12: Modules ---
     modules = [
         ("Module 1: Requirements Analyzer", [
             "Detects ambiguities in natural language",
             "Automatically drafts Gherkin User Stories",
-            "Flags Scope Creep and Undefined Dependencies",
             "Calculates a Completeness Score (0-100)"
         ], "Value: Replaces vague talk with testable requirements."),
         ("Module 2: AI Code Reviewer", [
             "Security-first architectural review",
-            "Identifies OWASP Top 10 vulnerabilities",
-            "Provides 'Before vs. After' code diffs with suggested fixes",
-            "Checks for missing unit tests for the changed code"
+            "Provides 'Before vs. After' code diffs with fixes",
+            "Checks for missing unit tests"
         ], "Value: Shields production from security flaws."),
         ("Module 3: Smart Test Generator", [
-            "Generates full pytest / jest files from raw function bodies",
-            "Covers edge cases (null values, boundary limits)",
-            "Prioritizes tests based on 'Regression Risk'"
+            "Generates full pytest / jest files automatically",
+            "Covers edge cases (null values, boundary limits)"
         ], "Value: Ensures high-quality coverage without manual overhead."),
         ("Module 4: Deployment Risk Scorer", [
             "Calculates a 0-100 risk score based on change signals",
-            "Escalates Auth changes and DB migrations",
             "Generates Rollback Plan and Monitoring Checklist"
         ], "Value: Minimizes downtime and deployment anxiety."),
         ("Module 5: Traceability Engine", [
             "Maps: Requirement → Story → Commit → Test → Deployment",
-            "Detects 'Orphaned Code' (Code with no requirement)",
             "Visually traces the 'Chain of Custody'"
         ], "Value: Simplifies audits and ensures business alignment."),
         ("Module 6: Multi-Agent Bug Fixer", [
             "Collaborative workflow: Analyst → Researcher → Fixer → QA",
-            "Automated root cause analysis from bug reports",
-            "Retrieves codebase context using RAG",
-            "Generates verified code fixes with regression warnings"
-        ], "Value: Slashes 'Mean Time To Repair' (MTTR) by 70%.")
+            "Automated root cause analysis from bug reports"
+        ], "Value: Slashes 'Mean Time To Repair' (MTTR) by 70%."),
+        ("Module 7: Integrations & RAG", [
+            "Live GitHub and Jira Webhook data streams",
+            "Codebase indexing for context-aware AI decisions"
+        ], "Value: Unified source of truth for the entire SDLC."),
+        ("Module 8: AI System Architect", [
+            "Converts natural language into live Mermaid.js diagrams",
+            "Automates architectural documentation and visualization"
+        ], "Value: Bridges the gap between business logic and technical design.")
     ]
 
     for m_title, m_points, m_value in modules:
@@ -194,65 +192,14 @@ def create_presentation():
             p.text = pt
             p.font.color.rgb = RGBColor(255, 255, 255)
             p.font.size = Pt(20)
-            p.level = 0
             
         p = tf.add_paragraph()
         p.text = ""
         p = tf.add_paragraph()
         p.text = m_value
         p.font.bold = True
-        p.font.color.rgb = RGBColor(0, 255, 127) # Spring Green
+        p.font.color.rgb = RGBColor(0, 255, 127)
         p.font.size = Pt(22)
-
-    # --- Slide 11: RAG & Contextual Intelligence ---
-    slide = prs.slides.add_slide(bullet_slide_layout)
-    background = slide.background
-    fill = background.fill
-    fill.solid()
-    fill.fore_color.rgb = RGBColor(10, 25, 47)
-
-    title = slide.shapes.title
-    title.text = "RAG & Contextual Intelligence"
-    title.text_frame.paragraphs[0].font.color.rgb = RGBColor(0, 183, 235)
-
-    body_shape = slide.shapes.placeholders[1]
-    tf = body_shape.text_frame
-    rag_points = [
-        "Problem: AI often lacks context of the existing codebase.",
-        "Solution: Retrieval-Augmented Generation (RAG).",
-        "Implementation: Codebase is indexed into a FAISS Vector Store.",
-        "Benefit: AI makes decisions based on actual project patterns, not just generic knowledge."
-    ]
-    for item in rag_points:
-        p = tf.add_paragraph()
-        p.text = item
-        p.font.color.rgb = RGBColor(255, 255, 255)
-        p.font.size = Pt(22)
-
-    # --- Slide 12: Enterprise Features ---
-    slide = prs.slides.add_slide(bullet_slide_layout)
-    background = slide.background
-    fill = background.fill
-    fill.solid()
-    fill.fore_color.rgb = RGBColor(10, 25, 47)
-
-    title = slide.shapes.title
-    title.text = "Enterprise Features (The 'Extra Mile')"
-    title.text_frame.paragraphs[0].font.color.rgb = RGBColor(0, 183, 235)
-
-    body_shape = slide.shapes.placeholders[1]
-    tf = body_shape.text_frame
-    features = [
-        "Real-time Integration: Live GitHub/Jira Webhook feed",
-        "Security: API Key Guarding and Header-based authentication",
-        "Exportability: One-click JSON/PDF/PPTX reports",
-        "Scalability: Asynchronous task processing with FastAPI"
-    ]
-    for item in features:
-        p = tf.add_paragraph()
-        p.text = item
-        p.font.color.rgb = RGBColor(255, 255, 255)
-        p.font.size = Pt(24)
 
     # --- Slide 13: Roadmap ---
     slide = prs.slides.add_slide(bullet_slide_layout)
@@ -277,10 +224,10 @@ def create_presentation():
         p.text = item
         p.font.color.rgb = RGBColor(255, 255, 255)
         p.font.size = Pt(24)
+
     # --- Slide 14: Conclusion ---
     slide = prs.slides.add_slide(title_slide_layout)
     set_slide_background(slide, bg_path)
-    
     title = slide.shapes.title
     title.text = "Conclusion / Q&A"
     title.text_frame.paragraphs[0].font.color.rgb = RGBColor(255, 255, 255)
@@ -295,4 +242,3 @@ def create_presentation():
 
 if __name__ == "__main__":
     create_presentation()
-

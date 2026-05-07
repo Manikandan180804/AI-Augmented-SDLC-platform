@@ -457,6 +457,9 @@ class TraceabilityRequest(BaseModel):
 class BugFixRequest(BaseModel):
     bug_report: str = Field(..., min_length=10, description="Description of the bug to fix")
 
+class ArchitectRequest(BaseModel):
+    text: str = Field(..., min_length=10, description="Description or code to generate architecture for")
+
 class IndexRequest(BaseModel):
     path: str = Field(default=".", description="Path to index")
 
@@ -542,4 +545,10 @@ async def index_code(req: IndexRequest):
 async def fix_bug(req: BugFixRequest):
     agent_fixer = agents.MultiAgentBugFixer(rag_engine_inst, safe_call)
     result = await agent_fixer.fix_bug(req.bug_report)
+    return result
+
+@app.post("/api/v1/architect/generate")
+async def generate_architecture(req: ArchitectRequest):
+    architect = agents.SystemArchitect(rag_engine_inst, safe_call)
+    result = await architect.generate_architecture(req.text)
     return result

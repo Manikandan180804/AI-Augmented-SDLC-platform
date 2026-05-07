@@ -2,13 +2,8 @@ import logging
 import json
 from typing import List, Dict, Any
 from rag_engine import CodeRAG
-# We will pass the call_ai function in the constructor, so we don't need to import main here.
 
 logger = logging.getLogger("sdlc-agents")
-
-# Since I can't easily import from main.py if it's not a package, 
-# I'll define a simple agent caller here or rely on the one in main.py if I can.
-# For simplicity, I'll define the prompts and logic here and integrate into main.py.
 
 BUG_ANALYST_PROMPT = """You are a Bug Analyst. Your job is to understand the reported bug and identify the core issue.
 Analyze the bug report and any provided context.
@@ -22,6 +17,10 @@ Return JSON: {"fix_description": "...", "proposed_changes": [{"file": "...", "or
 
 QA_REVIEWER_PROMPT = """You are a QA Reviewer. Review the proposed fix for potential regressions or edge cases.
 Return JSON: {"status": "approved|needs_revision", "comments": "...", "suggested_test_cases": []}"""
+
+ARCHITECT_PROMPT = """You are a System Architect. Analyze the provided code or requirements and generate a Mermaid.js diagram representing the architecture.
+Focus on component relationships, data flow, or class structures.
+Return ONLY JSON: {"diagram": "mermaid code starting with graph TD or similar", "explanation": "..."}"""
 
 class MultiAgentBugFixer:
     def __init__(self, rag_engine: CodeRAG, call_ai_func):
@@ -83,3 +82,22 @@ class MultiAgentBugFixer:
             "fix": fix_res,
             "review": review_res
         }
+
+class SystemArchitect:
+    def __init__(self, rag_engine: CodeRAG, call_ai_func):
+        self.rag = rag_engine
+        self.call_ai = call_ai_func
+
+    async def generate_architecture(self, input_text: str):
+        logger.info("Agent: Generating architecture diagram...")
+        # Get context if it looks like a short query, otherwise use text directly
+        context = ""
+        if len(input_text) < 200:
+            context = self.rag.get_context(input_text)
+        
+        prompt_input = f"INPUT: {input_text}\n\nCONTEXT:\n{context}"
+        mock_diagram = {
+            "diagram": "graph TD\n  A[User] --> B[FastAPI]\n  B --> C{AI Engine}\n  C --> D[Response]\n  B --> E[Vector DB]",
+            "explanation": "Standard flow for the AI-SDLC platform components."
+        }
+        return self.call_ai(ARCHITECT_PROMPT, prompt_input, mock_diagram)
