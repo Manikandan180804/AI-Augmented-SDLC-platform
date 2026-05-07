@@ -1,0 +1,28 @@
+# IDE
+.vscode/
+.idea/
+
+# Node
+node_modules/
+dist/
+build/
+.npm/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+.venv/
+env/
+.env
+.env.local
+
+# Project Specific
+faiss_index/
+*.pptx
+!backend/AI_SDLC_Presentation.pptx # Keep the main presentation
+
+# OS
+.DS_Store
+Thumbs.db
