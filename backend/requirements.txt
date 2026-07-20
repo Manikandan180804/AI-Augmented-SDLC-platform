@@ -11,4 +11,6 @@ python-multipart==0.0.12
 gitpython==3.1.43
 python-pptx==0.6.21
 gunicorn
+a2wsgi
+
 
