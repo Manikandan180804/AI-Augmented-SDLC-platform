@@ -12,10 +12,20 @@ logger = logging.getLogger("sdlc-rag")
 class CodeRAG:
     def __init__(self, persist_directory: str = "./faiss_index"):
         self.persist_directory = persist_directory
-        self.embeddings = OpenAIEmbeddings()
+        self.embeddings = None
         self.vector_store = None
         
-        if os.path.exists(persist_directory):
+        api_key = os.getenv("OPENAI_API_KEY", "")
+        if not api_key:
+            api_key = "sk-dummy-key-for-initialization"
+
+        try:
+            self.embeddings = OpenAIEmbeddings(openai_api_key=api_key)
+        except Exception as e:
+            logger.warning(f"Could not initialize OpenAIEmbeddings: {e}")
+            self.embeddings = None
+
+        if os.path.exists(persist_directory) and self.embeddings:
             try:
                 self.vector_store = FAISS.load_local(
                     persist_directory, 
@@ -25,6 +35,7 @@ class CodeRAG:
                 logger.info(f"Loaded existing vector store from {persist_directory}")
             except Exception as e:
                 logger.error(f"Error loading vector store: {e}")
+
 
     def index_directory(self, directory_path: str):
         """Indexes all text/code files in the given directory."""
