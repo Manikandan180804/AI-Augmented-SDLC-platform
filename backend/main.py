@@ -4,8 +4,10 @@ import os
 from dotenv import load_dotenv
 from fastapi import FastAPI, HTTPException, Request, status
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, FileResponse
+from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
+
 
 load_dotenv()
 import rag_engine
@@ -562,3 +564,26 @@ async def generate_architecture(req: ArchitectRequest):
     architect = agents.SystemArchitect(rag_engine_inst, safe_call)
     result = await architect.generate_architecture(req.text)
     return result
+
+# ─── SERVE REACT FRONTEND ──────────────────────────────────────────────────────
+frontend_dist = os.path.abspath(os.path.join(os.path.dirname(__file__), "../frontend/dist"))
+if os.path.exists(frontend_dist):
+    assets_dir = os.path.join(frontend_dist, "assets")
+    if os.path.exists(assets_dir):
+        app.mount("/assets", StaticFiles(directory=assets_dir), name="assets")
+
+    @app.get("/{full_path:path}")
+    async def serve_spa(full_path: str):
+        # Don't intercept API endpoints or docs
+        if full_path.startswith("api/") or full_path in ["health", "docs", "openapi.json", "redoc"]:
+            raise HTTPException(status_code=404, detail="Not Found")
+        
+        target_file = os.path.join(frontend_dist, full_path)
+        if os.path.exists(target_file) and os.path.isfile(target_file):
+            return FileResponse(target_file)
+        
+        index_file = os.path.join(frontend_dist, "index.html")
+        if os.path.exists(index_file):
+            return FileResponse(index_file)
+        raise HTTPException(status_code=404, detail="Frontend index.html not found")
+
