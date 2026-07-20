@@ -467,17 +467,9 @@ class IndexRequest(BaseModel):
 
 # ─── ENDPOINTS ────────────────────────────────────────────────────────────────
 
-@app.get("/")
-async def root():
-    return {
-        "name": "AI-Augmented SDLC Platform API",
-        "status": "online",
-        "docs_url": "/docs",
-        "health_check": "/health"
-    }
-
 @app.get("/health")
 async def health():
+
 
     demo = DEMO_MODE or not _openai_available or not _OPENAI_API_KEY
     return {"status": "ok", "demo_mode": demo}
